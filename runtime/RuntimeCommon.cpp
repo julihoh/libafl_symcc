@@ -134,6 +134,12 @@ void _sym_write_memory(uint8_t *addr, size_t length, SymExpr expr,
   }
 }
 
+#ifdef COMMON_ONLY
+
+// these builders should be implementable by the runtime.
+
+#else
+
 SymExpr _sym_build_extract(SymExpr expr, uint64_t offset, uint64_t length,
                            bool little_endian) {
   size_t totalBits = _sym_bits_helper(expr);
@@ -162,6 +168,8 @@ SymExpr _sym_build_bswap(SymExpr expr) {
   assert((bits % 16 == 0) && "bswap is not applicable");
   return _sym_build_extract(expr, 0, bits / 8, true);
 }
+
+#endif
 
 void _sym_register_expression_region(SymExpr *start, size_t length) {
   registerExpressionRegion({start, length});
